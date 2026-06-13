@@ -133,14 +133,14 @@ R watchValue<T extends Object, R>(
   bool allowObservableChange = false,
   String? instanceName,
   GetIt? getIt,
-  dynamic? param1,
-  dynamic? param2,
+  dynamic param1,
+  dynamic param2,
 }) {
   assert(_activeWatchItState != null,
       'watchValue can only be called inside a build function within a WatchingWidget or a widget using the WatchItMixin');
   final getItInstance = getIt ?? di;
-  final parentObject = getItInstance<T>(instanceName: instanceName,
-      param1: param1, param2: param2);
+  final parentObject = getItInstance<T>(
+      instanceName: instanceName, param1: param1, param2: param2);
   final observedObject = _activeWatchItState!.watchListenable<T, R>(
     parentOrListenable: parentObject,
     selector: selectProperty,
@@ -333,15 +333,16 @@ void registerHandler<T extends Object, R>({
   bool executeImmediately = false,
   String? instanceName,
   GetIt? getIt,
-  dynamic? param1,
-  dynamic? param2,
+  dynamic param1,
+  dynamic param2,
 }) {
   assert(_activeWatchItState != null,
       'registerHandler can only be called inside a build function within a WatchingWidget or a widget using the WatchItMixin');
 
   final getItInstance = getIt ?? di;
-  final parentObject = target ?? getItInstance<T>(instanceName: instanceName,
-      param1: param1, param2: param2);
+  final parentObject = target ??
+      getItInstance<T>(
+          instanceName: instanceName, param1: param1, param2: param2);
 
   // Validate target type when no select function is provided
   if (select == null && parentObject is! Listenable) {
