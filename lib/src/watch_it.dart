@@ -174,13 +174,17 @@ R watchPropertyValue<T extends Listenable, R>(
   T? target,
   String? instanceName,
   GetIt? getIt,
+  dynamic param1,
+  dynamic param2,
 }) {
   assert(_activeWatchItState != null,
       'watchPropertyValue can only be called inside a build function within a WatchingWidget or a widget using the WatchItMixin');
   late final T observedObject;
 
   final getItInstance = getIt ?? di;
-  final parentObject = target ?? getItInstance<T>(instanceName: instanceName);
+  final parentObject = target ??
+      getItInstance<T>(
+          instanceName: instanceName, param1: param1, param2: param2);
   final R observedProperty = selectProperty(parentObject);
   assert(
       (observedProperty != null && observedProperty is! Listenable) ||
@@ -222,12 +226,16 @@ AsyncSnapshot<R> watchStream<T extends Object, R>(
   bool allowStreamChange = false,
   String? instanceName,
   GetIt? getIt,
+  dynamic param1,
+  dynamic param2,
 }) {
   assert(_activeWatchItState != null,
       'watchStream can only be called inside a build function within a WatchingWidget or a widget using the WatchItMixin');
 
   final getItInstance = getIt ?? di;
-  final parentObject = target ?? getItInstance<T>(instanceName: instanceName);
+  final parentObject = target ??
+      getItInstance<T>(
+          instanceName: instanceName, param1: param1, param2: param2);
 
   // Validate target type when no select function is provided
   if (select == null && parentObject is! Stream<R>) {
@@ -274,12 +282,16 @@ AsyncSnapshot<R> watchFuture<T extends Object, R>(
   bool preserveState = true,
   bool allowFutureChange = false,
   GetIt? getIt,
+  dynamic param1,
+  dynamic param2,
 }) {
   assert(_activeWatchItState != null,
       'watchFuture can only be called inside a build function within a WatchingWidget or a widget using the WatchItMixin');
 
   final getItInstance = getIt ?? di;
-  final parentObject = target ?? getItInstance<T>(instanceName: instanceName);
+  final parentObject = target ??
+      getItInstance<T>(
+          instanceName: instanceName, param1: param1, param2: param2);
 
   // Validate target type when no select function is provided
   if (select == null && parentObject is! Future<R>) {
@@ -382,12 +394,16 @@ void registerChangeNotifierHandler<T extends ChangeNotifier>({
   bool executeImmediately = false,
   String? instanceName,
   GetIt? getIt,
+  dynamic param1,
+  dynamic param2,
 }) {
   assert(_activeWatchItState != null,
       'registerHandler can only be called inside a build function within a WatchingWidget or a widget using the WatchItMixin');
 
   final getItInstance = getIt ?? di;
-  final parentObject = target ?? getItInstance<T>(instanceName: instanceName);
+  final parentObject = target ??
+      getItInstance<T>(
+          instanceName: instanceName, param1: param1, param2: param2);
 
   _activeWatchItState!.watchListenable<T, T>(
     parentOrListenable: parentObject,
@@ -423,12 +439,16 @@ void registerStreamHandler<T extends Object, R>({
   T? target,
   String? instanceName,
   GetIt? getIt,
+  dynamic param1,
+  dynamic param2,
 }) {
   assert(_activeWatchItState != null,
       'registerStreamHandler can only be called inside a build function within a WatchingWidget or a widget using the WatchItMixin');
 
   final getItInstance = getIt ?? di;
-  final parentObject = target ?? getItInstance<T>(instanceName: instanceName);
+  final parentObject = target ??
+      getItInstance<T>(
+          instanceName: instanceName, param1: param1, param2: param2);
 
   // Validate target type when no select function is provided
   if (select == null && parentObject is! Stream<R>) {
@@ -480,12 +500,16 @@ void registerFutureHandler<T extends Object, R>({
   bool callHandlerOnlyOnce = false,
   bool allowFutureChange = false,
   GetIt? getIt,
+  dynamic param1,
+  dynamic param2,
 }) {
   assert(_activeWatchItState != null,
       'registerFutureHandler can only be called inside a build function within a WatchingWidget or a widget using the WatchItMixin');
 
   final getItInstance = getIt ?? di;
-  final parentObject = target ?? getItInstance<T>(instanceName: instanceName);
+  final parentObject = target ??
+      getItInstance<T>(
+          instanceName: instanceName, param1: param1, param2: param2);
 
   // Validate target type when no select function is provided
   if (select == null && parentObject is! Future<R>) {
