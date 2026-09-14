@@ -240,7 +240,11 @@ class _WatchItState {
     Listenable actualTarget;
 
     if (watch != null) {
-      if (!allowObservableChange && selector != null) {
+      final parentChanged = selector != null &&
+          watch.parentObject != null &&
+          !identical(watch.parentObject, parentOrListenable);
+
+      if (!parentChanged && !allowObservableChange && selector != null) {
         // FAST PATH: Don't call selector, reuse cached observable
         return watch.observedObject;
       }
@@ -255,11 +259,12 @@ class _WatchItState {
       }
 
       if (actualTarget == watch.observedObject) {
+        watch.parentObject = parentOrListenable;
         return watch.observedObject;
       }
 
       // Observable changed
-      if (!allowObservableChange) {
+      if (!allowObservableChange && !parentChanged) {
         throw StateError(
             'watchListenable detected an observable change but allowObservableChange is false.\n'
             '\n'
@@ -275,6 +280,7 @@ class _WatchItState {
             'Widget: ${_element?.widget.runtimeType}\n');
       }
       watch.dispose();
+      watch.parentObject = parentOrListenable;
     } else {
       // First build - get the observable
       if (selector != null) {
@@ -322,6 +328,7 @@ class _WatchItState {
     };
     watch.notificationHandler = internalHandler;
     watch.observedObject = actualTarget;
+    watch.parentObject = parentOrListenable;
 
     actualTarget.addListener(internalHandler);
     if (handler != null && executeImmediately) {
@@ -358,6 +365,8 @@ class _WatchItState {
         /// the target object has changed probably by passing another instance
         /// so we have to unregister our handler and subscribe anew
         watch.dispose();
+        watch.observedObject = listenable;
+        watch.parentObject = parentObject;
       } else {
         // if the listenable is the same we can directly return
         return;
@@ -410,7 +419,11 @@ class _WatchItState {
     Stream<R> actualStream;
 
     if (watch != null) {
-      if (!allowStreamChange && selector != null) {
+      final parentChanged = selector != null &&
+          watch.parentObject != null &&
+          !identical(watch.parentObject, parentOrStream);
+
+      if (!parentChanged && !allowStreamChange && selector != null) {
         // FAST PATH: Don't call selector, reuse cached stream
         actualStream = watch.observedObject;
 
@@ -447,6 +460,8 @@ class _WatchItState {
           /// select returned a different value than the last time
           /// so we have to unregister our handler and subscribe anew
           watch.dispose();
+          watch.parentObject = parentOrStream;
+          watch.observedObject = actualStream;
           initialValue = preserveState && watch.lastValue!.hasData
               ? watch.lastValue!.data
               : initialValue;
@@ -625,7 +640,12 @@ class _WatchItState {
 
     R? initialValue;
     if (watch != null) {
-      if (!allowFutureChange && selector != null && futureProvider == null) {
+      final parentChanged = selector != null &&
+          parentOrFuture != null &&
+          watch.parentObject != null &&
+          !identical(watch.parentObject, parentOrFuture);
+
+      if (!parentChanged && !allowFutureChange && selector != null && futureProvider == null) {
         // FAST PATH: Don't call selector, reuse cached future
         future = watch.observedObject;
 
@@ -660,6 +680,8 @@ class _WatchItState {
           /// Future identity changed
           /// so we have to unregister out handler and subscribe anew
           watch.dispose();
+          watch.parentObject = parentOrFuture;
+          watch.observedObject = future;
           initialValue = preserveState && watch.lastValue!.hasData
               ? watch.lastValue!.data
               : initialValueProvider.call();
