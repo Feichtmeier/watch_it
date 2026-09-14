@@ -645,7 +645,10 @@ class _WatchItState {
           watch.parentObject != null &&
           !identical(watch.parentObject, parentOrFuture);
 
-      if (!parentChanged && !allowFutureChange && selector != null && futureProvider == null) {
+      if (!parentChanged &&
+          !allowFutureChange &&
+          selector != null &&
+          futureProvider == null) {
         // FAST PATH: Don't call selector, reuse cached future
         future = watch.observedObject;
 
